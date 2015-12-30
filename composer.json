@@ -1,5 +1,5 @@
 {
-    "name": "dsampaolo/laravel-blog",
+    "name": "didcode/laravel-blog",
     "description": "Provides blog capabilities to your Laravel 5 installation. /!\\ Early pre-stable version",
     "keywords": ["laravel","blog"],
     "license": "MIT",
@@ -8,7 +8,7 @@
             "name": "Didier Sampaolo",
             "email": "didier@didcode.com",
             "homepage": "http://didcode.com/",
-            "role": "Developer"
+            "role": "CEO/Developer"
         }
     ],
     "minimum-stability": "dev",
