@@ -1,9 +1,9 @@
-<?php namespace DSampaolo\Blog;
+<?php namespace didcode\Blog;
 
 use App\Http\Controllers\Controller;
-use DSampaolo\Blog\Models\Post;
-use DSampaolo\Blog\Models\Category;
-use DSampaolo\Blog\Models\Option;
+use didcode\Blog\Models\Post;
+use didcode\Blog\Models\Category;
+use didcode\Blog\Models\Option;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTablesDsampaoloBlog extends Migration {
+class CreateTablesDidcodeBlog extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTablesDsampaoloBlog extends Migration {
 	public function up()
 	{
 
-        Schema::create('dsampaolo_blog_categories', function(Blueprint $table) {
+        Schema::create('didcode_blog_categories', function(Blueprint $table) {
             $table->increments('id');
 
             $table->string('name');
@@ -23,7 +23,7 @@ class CreateTablesDsampaoloBlog extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('dsampaolo_blog_options', function(Blueprint $table) {
+        Schema::create('didcode_blog_options', function(Blueprint $table) {
             $table->increments('id');
 
             $table->string('name');
@@ -32,7 +32,7 @@ class CreateTablesDsampaoloBlog extends Migration {
             $table->timestamps();
         });
 
-		Schema::create('dsampaolo_blog_posts', function(Blueprint $table) {
+		Schema::create('didcode_blog_posts', function(Blueprint $table) {
             $table->increments('id');
 
             $table->string('title');
@@ -59,9 +59,9 @@ class CreateTablesDsampaoloBlog extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('dsampaolo_blog_posts');
-		Schema::drop('dsampaolo_blog_options');
-		Schema::drop('dsampaolo_blog_categories');
+		Schema::drop('didcode_blog_posts');
+		Schema::drop('didcode_blog_options');
+		Schema::drop('didcode_blog_categories');
 	}
 
 }

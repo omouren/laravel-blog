@@ -1,9 +1,9 @@
-<?php namespace DSampaolo\Blog\Models;
+<?php namespace didcode\Blog\Models;
 
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Post extends Eloquent {
-    protected $table = 'dsampaolo_blog_posts';
+    protected $table = 'didcode_blog_posts';
     protected $fillable = ['title', 'slug', 'chapo', 'content', 'published_at'];
 
     function getUrlAttribute($value) {
@@ -24,7 +24,7 @@ class Post extends Eloquent {
     }
 
     function Category() {
-        return $this->hasOne('DSampaolo\Blog\Models\Category', 'id', 'category_id');
+        return $this->hasOne('didcode\Blog\Models\Category', 'id', 'category_id');
     }
 
     function getImageAttribute($value) {

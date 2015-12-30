@@ -53,7 +53,7 @@
                 <td>{{ $category->slug }}</td>
                 <td>{{ $category->posts_num }}</td>
                 <td>
-{{--                    <a href="{{ action('\DSampaolo\Blog\AdminController@editCat', $category->id) }}" class="btn btn-primary">Edit</a>--}}
+{{--                    <a href="{{ action('\didcode\Blog\AdminController@editCat', $category->id) }}" class="btn btn-primary">Edit</a>--}}
                 </td>
             </tr>
 
@@ -77,7 +77,7 @@
             <td>{{ $post->published_at }}</td>
             <td>{{ $post->title }}</td>
             <td>
-                <a href="{{ action('\DSampaolo\Blog\AdminController@editPost', $post->id) }}" class="btn btn-primary">Edit</a>
+                <a href="{{ action('\didcode\Blog\AdminController@editPost', $post->id) }}" class="btn btn-primary">Edit</a>
                 @if (!$post->is_published() )
                     <button data-id="{{$post->id}}" class="btn btn-publish btn-success">Publish</button>
                 @endif
@@ -86,7 +86,7 @@
 
     @endforeach
     </table>
-    <a href="{{ action('\DSampaolo\Blog\AdminController@createPost') }}" class="btn btn-success">Create post</a>
+    <a href="{{ action('\didcode\Blog\AdminController@createPost') }}" class="btn btn-success">Create post</a>
 
 @endsection
 

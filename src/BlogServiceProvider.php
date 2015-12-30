@@ -1,4 +1,4 @@
-<?php namespace DSampaolo\Blog;
+<?php namespace didcode\Blog;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -27,8 +27,8 @@ class BlogServiceProvider extends ServiceProvider {
 	public function register()
 	{
         include __DIR__.'/routes.php';
-        $this->app->make('DSampaolo\Blog\BlogController');
-        $this->app->make('DSampaolo\Blog\AdminController');
+        $this->app->make('didcode\Blog\BlogController');
+        $this->app->make('didcode\Blog\AdminController');
 	}
 
 }
