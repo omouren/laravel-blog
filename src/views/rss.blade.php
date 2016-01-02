@@ -22,7 +22,7 @@
             <link>{{ $post->url }}</link>
             <pubDate>{{ $post->pubDate }}</pubDate>
 
-            <guid isPermaLink="true">{{ $post->url }}</guid>
+            <guid isPermaLink="true">{{ \Illuminate\Support\Facades\URL::to('/') }}{{ $post->url }}</guid>
             <description><![CDATA[{!! $post->chapo !!}
                 ]]></description>
         </item>
