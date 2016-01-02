@@ -6,7 +6,7 @@
         <div class="container">
             <ul class="breadcrumb">
                 <li><a href="/">Home</a></li>
-                <li class="active">Blog</li>
+                <li class="active">{{ config('blog.base_name') }}</li>
             </ul>
 
             <div class="row margin-bottom-40">

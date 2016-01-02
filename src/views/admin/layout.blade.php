@@ -11,7 +11,7 @@
 <body>
     <div class="container-fluid">
 
-        <div class="pull-right" style="padding-top: 10px"><a class="btn btn-primary" target="_blank" href="/blog">View blog</a></div>
+        <div class="pull-right" style="padding-top: 10px"><a class="btn btn-primary" target="_blank" href="{{ config('blog.base_path') }}">View blog</a></div>
         <h1><a href="/admin/blog/">Admin Blog</a></h1>
 
         @yield('content')
