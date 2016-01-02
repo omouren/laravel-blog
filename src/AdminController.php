@@ -91,15 +91,11 @@ class AdminController extends Controller {
 
     public function ajax_post_save() {
 
-        $fields = array_except(\Input::all(), ['_token', 'post_id' ]);
+        $fields = array_except(Input::all(), ['_token', 'post_id' ]);
 
-        if (strlen($fields['slug']) === 0) {
-            $fields['slug'] = Str::slug($fields['title']);
-        } else {
-            $fields['slug'] = Str::slug($fields['slug']);
-        }
+        $fields['slug'] = (strlen($fields['slug']) === 0) ? Str::slug($fields['title']) : Str::slug($fields['slug']);
 
-        if (\Input::get('post_id') > 0) {
+        if (Input::get('post_id') > 0) {
             $post = Post::find(Input::get('post_id'));
             $post->update($fields);
         } else {
@@ -108,7 +104,6 @@ class AdminController extends Controller {
 
         return response()->json($post);
     }
-
 
     public function ajax_post_load() {
         $post_id = Input::get('post_id');
@@ -120,7 +115,6 @@ class AdminController extends Controller {
 
     public function ajax_post_publish() {
         $post_id = Input::get('post_id');
-
 
         $post = Post::find($post_id);
         if ($post->published_at === '0000-00-00 00:00:00') {

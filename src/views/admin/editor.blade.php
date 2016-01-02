@@ -107,6 +107,9 @@
 
             $(this).addClass('disabled');
 
+            console.log('cat_id : '+$('#category_id').val());
+
+
             $.post('/admin/blog/save_post', {
                 _token: "{{ csrf_token() }}",
 

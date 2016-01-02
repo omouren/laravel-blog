@@ -23,7 +23,7 @@
             <pubDate>{{ $post->pubDate }}</pubDate>
 
             <guid isPermaLink="true">{{ $post->url }}</guid>
-            <description><![CDATA[<p>{{ $post->chapo }}</p>
+            <description><![CDATA[{!! $post->chapo !!}
                 ]]></description>
         </item>
         @endforeach

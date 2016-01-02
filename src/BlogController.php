@@ -16,10 +16,11 @@ class BlogController extends Controller {
     {
         $categories = Category::all();
         $posts = Post::isPublished()->paginate(10);
+
         return view('blog::index')
             ->withPosts($posts)
             ->withCategories($categories)
-            ->withTitle('Didier Sampaolo : le blog');
+            ->withPageTitle(config('blog.title'));
     }
 
     public function show($slug) {
@@ -29,7 +30,7 @@ class BlogController extends Controller {
         return view('blog::post.show')
             ->withPost($post)
             ->withCategories($categories)
-            ->withTitle($post->title.' - Magazine');
+            ->withPageTitle($post->title.' - Magazine');
     }
 
     public function showPost($slug) {
@@ -43,7 +44,7 @@ class BlogController extends Controller {
     }
 
     public function rss() {
-        $posts = Post::isPublished()->orderBy('created_at', 'desc')->take(10)->get();
+        $posts = Post::isPublished()->orderBy('published_at', 'desc')->take(10)->get(); //TODO use options instead of take(10) !
         $last_build_date = \DateTime::createFromFormat('Y-m-d H:i:s', Post::max('created_at'))->format('D, d M Y H:i:s O');
 
         $content = view('blog::rss')

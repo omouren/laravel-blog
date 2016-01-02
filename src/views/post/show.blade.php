@@ -1,4 +1,4 @@
-@extends('app')
+@extends(config('blog.layout_path'))
 
 @section('content')
 

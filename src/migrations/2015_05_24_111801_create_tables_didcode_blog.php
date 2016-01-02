@@ -47,7 +47,7 @@ class CreateTablesDidcodeBlog extends Migration {
 
             $table->enum('post_status', ['draft', 'published']);
 
-            $table->dateTime('published_at');
+            $table->dateTime('published_at')->nullable();
             $table->timestamps();
         });
 	}

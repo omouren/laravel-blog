@@ -4,7 +4,7 @@ use \Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Post extends Eloquent {
     protected $table = 'didcode_blog_posts';
-    protected $fillable = ['title', 'slug', 'chapo', 'content', 'published_at'];
+    protected $fillable = ['title', 'slug', 'chapo', 'content', 'published_at', 'category_id'];
 
     function getUrlAttribute($value) {
 //        return \Url::to('/blog/'.$this->slug).'/';
@@ -16,11 +16,11 @@ class Post extends Eloquent {
     }
 
     function scopeIsPublished($query) {
-        return $query->where('published_at', '<', \DB::raw('now()'));
+        return $query->where('published_at','!=','0000-00-00 00:00:00')->where('published_at', '<', \DB::raw('now()'));
     }
 
     function is_published() {
-        return ($this->published_at !== '0000-00-00 00:00:00');
+        return ($this->published_at !== null);
     }
 
     function Category() {
