@@ -28,6 +28,9 @@ class Post extends Eloquent {
     }
 
     function getImageAttribute($value) {
+        if ($value == '') {
+            return config('blog.default_image');
+        }
         return '/img/posts/'.$value;
     }
 

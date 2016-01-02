@@ -21,9 +21,13 @@
                         <p><img style="width:100%" src="{{ $post->image }}" alt="" class="img-responsive"></p>
                         @endif
 
-                        <p>{{ $post->chapo }}</p>
+                        <div class="post_header">
+                            {!! $post->chapo !!}
+                        </div>
 
-                        {!! $post->content !!}
+                        <div class="post_content">
+                            {!! $post->content !!}
+                        </div>
                     </div>
                 </div>
 
