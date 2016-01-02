@@ -12,7 +12,10 @@ class AdminController extends Controller {
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $middleware = config('blog.admin_middleware');
+        if ($middleware) {
+            $this->middleware($middleware);
+        }
     }
 
     /**
