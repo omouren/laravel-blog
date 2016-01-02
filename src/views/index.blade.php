@@ -11,12 +11,7 @@
 
             <div class="row margin-bottom-40">
                 <div class="col-md-9 col-sm-9">
-
-                    @foreach($posts as $post)
-                        @include('blog::post.listView')
-
-                    @endforeach
-
+                    @each('blog::post.listView', $posts, 'post')
                     {{ $posts->render() }}
                 </div>
 
