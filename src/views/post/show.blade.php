@@ -1,5 +1,23 @@
 @extends(config('blog.layout_path'))
 
+@section('og_meta')
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="{{ config('blog.og_twitter }}">
+        <meta name="twitter:creator" content="{{ config('blog.og_twitter }}">
+        <meta name="twitter:title" content="{{ $post->title }}">
+        <meta name="twitter:description" content="{{ strip_tags($post->chapo) }}">
+        <meta name="twitter:image" content="{{ $post->image }}">
+
+        <meta property="og:title" content="{{ $post->title }}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="{{ $post->image }}"/>
+        <meta property="og:site_name" content="{{ config('blog.site_name') }}"/>
+        <meta property="og:description" content="{{ strip_tags($post->chapo) }}" />
+        <meta property="og:url" content="{{ URL::to('/') }}{{ $post->url }}" />
+        <meta property="og:author" content="{{ config('blog.og_author') }}" />
+        <meta property="og:author" content="{{ config('blog.og_publisher') }}" />
+@endsection
+
 @section('content')
 
     <div class="main">
