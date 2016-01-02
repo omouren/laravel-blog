@@ -7,6 +7,6 @@ class Category extends Eloquent {
     protected $fillable = ['name', 'slug'];
 
     function getUrlAttribute() {
-        return '/blog/c-'.$this->slug.'/';
+        return config('blog.base_path').'c-'.$this->slug.'/';
     }
 }

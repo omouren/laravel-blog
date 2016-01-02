@@ -6,7 +6,7 @@
         <div class="container">
             <ul class="breadcrumb">
                 <li><a href="/">Home</a></li>
-                <li><a href="/blog/">Blog</a></li>
+                <li><a href="{{ config('blog.base_path') }}">{{ config('blog.base_name') }}</a></li>
                 <li><a href="{{ $post->Category->url }}">{{ $post->Category->name }}</a></li>
                 <li class="active">{{ $post->title }}</li>
 

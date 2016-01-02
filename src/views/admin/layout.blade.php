@@ -11,7 +11,8 @@
 <body>
     <div class="container-fluid">
 
-        <h1>Admin Blog</h1>
+        <div class="pull-right" style="padding-top: 10px"><a class="btn btn-primary" target="_blank" href="/blog">View blog</a></div>
+        <h1><a href="/admin/blog/">Admin Blog</a></h1>
 
         @yield('content')
 

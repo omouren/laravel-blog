@@ -2,38 +2,6 @@
 
 @section('content')
 
-    <hr />
-    <h2>Options</h2>
-
-
-    <h3>RSS Options</h3>
-
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="option_rss_name">Site name</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="option_rss_name" value="{{ $option_rss_name }}" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="option_rss_number">Number of posts</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="option_rss_number" value="{{ $option_rss_number }}" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="option_rss_fullposts">Full post or Excerpt ?</label>
-            <div class="col-sm-10">
-                <select type="text" class="form-control" id="option_rss_fullposts">
-                    <option value="excerpt">Excerpts only</option>
-                    <option value="full">Full posts</option>
-                </select>
-            </div>
-        </div>
-
-        <button id="btn_save_options" type="submit" class="col-md-offset-2 btn btn-primary">Save options</button>
-    </form>
-
 
     <hr />
 
@@ -67,6 +35,7 @@
     <table class="table table-bordered table-hover table-striped">
         <tr>
             <th>ID</th>
+            <th>Status</th>
             <th>Published on</th>
             <th>Title</th>
             <th>Actions</th>
@@ -74,6 +43,7 @@
     @foreach($posts as $post)
         <tr>
             <td>{{ $post->id }}</td>
+            <td>{{ $post->status }}</td>
             <td>{{ $post->published_at }}</td>
             <td>{{ $post->title }}</td>
             <td>
@@ -87,6 +57,36 @@
     @endforeach
     </table>
     <a href="{{ action('\didcode\Blog\AdminController@createPost') }}" class="btn btn-success">Create post</a>
+
+    <hr />
+    <h3>RSS Options</h3>
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="option_rss_name">Site name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="option_rss_name" value="{{ $option_rss_name }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="option_rss_number">Number of posts</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="option_rss_number" value="{{ $option_rss_number }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="option_rss_fullposts">Full post or Excerpt ?</label>
+            <div class="col-sm-10">
+                <select type="text" class="form-control" id="option_rss_fullposts">
+                    <option value="excerpt">Excerpts only</option>
+                    <option value="full">Full posts</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="btn_save_options" type="submit" class="col-md-offset-2 btn btn-primary">Save options</button>
+    </form>
+
 
 @endsection
 

@@ -4,11 +4,10 @@ use \Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Post extends Eloquent {
     protected $table = 'didcode_blog_posts';
-    protected $fillable = ['title', 'slug', 'chapo', 'content', 'published_at', 'category_id'];
+    protected $fillable = ['status', 'title', 'slug', 'chapo', 'content', 'published_at', 'category_id'];
 
     function getUrlAttribute($value) {
-//        return \Url::to('/blog/'.$this->slug).'/';
-        return '/blog/'.$this->slug.'/';
+        return config('blog.base_path').$this->slug.'/';
     }
 
     function getPubDateAttribute($value) {
