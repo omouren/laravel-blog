@@ -58,7 +58,7 @@ class BlogController extends Controller {
     public function showCategory($slug) {
         $categories = Category::all();
         $category = Category::whereSlug($slug)->first();
-        $posts = Post::where('category_id', $category->id)->paginate(10);
+        $posts = Post::isPublished()->where('category_id', $category->id)->paginate(10);
 
         return view('blog::category.show')
             ->withPageTitle($category->name)
