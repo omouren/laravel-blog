@@ -15,7 +15,7 @@ class Post extends Eloquent {
     }
 
     function scopeIsPublished($query) {
-        return $query->where('published_at','!=','0000-00-00 00:00:00')->where('published_at', '<', \DB::raw('now()'));
+        return $query->where('published_at','!=',null)->where('published_at', '<', \DB::raw('now()'));
     }
 
     function is_published() {

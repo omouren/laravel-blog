@@ -35,7 +35,7 @@ class AdminController extends Controller {
     }
 
     public function createPost() {
-        $categories = Category::lists('name', 'id');
+        $categories = Category::pluck('name', 'id');
 
         return view('blog::admin.editor')
             ->withCategories($categories)
@@ -43,7 +43,7 @@ class AdminController extends Controller {
     }
 
     public function editPost($id) {
-        $categories = Category::lists('name', 'id');
+        $categories = Category::pluck('name', 'id');
         $post= Post::find($id);
 
         return view('blog::admin.editor')

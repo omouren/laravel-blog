@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'admin'], function()
+Route::group(['prefix' => 'admin', 'middleware' => config('blog.base_path')], function()
 {
     Route::get('blog', 'didcode\Blog\AdminController@index');
     Route::get('post/create', 'didcode\Blog\AdminController@createPost');
@@ -22,6 +22,6 @@ Route::group(['prefix' => 'admin'], function()
 
 Route::get('feed' , 'didcode\Blog\BlogController@rss');
 
-Route::get(config('blog.base_path') , 'didcode\Blog\BlogController@index');
+Route::get(config('blog.base_path'), 'didcode\Blog\BlogController@index');
 Route::get(config('blog.base_path').'c-{slug}', 'didcode\Blog\BlogController@showCategory');
 Route::get(config('blog.base_path').'{slug}', 'didcode\Blog\BlogController@showPost');

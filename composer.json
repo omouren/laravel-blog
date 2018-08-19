@@ -19,6 +19,17 @@
     "autoload": {
         "classmap": [
             "src/Models"
-        ]
+        ],
+        "psr-4": {
+            "didcode\\Blog\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "didcode\\Blog\\BlogServiceProvider"
+            ],
+            "aliases": {}
+        }
     }
 }
