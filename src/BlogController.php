@@ -1,4 +1,6 @@
-<?php namespace didcode\Blog;
+<?php
+
+namespace didcode\Blog;
 
 use App\Http\Controllers\Controller;
 use didcode\Blog\Models\Category;

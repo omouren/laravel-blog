@@ -65,13 +65,13 @@
         <div class="form-group">
             <label class="col-sm-2 control-label" for="option_rss_name">Site name</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="option_rss_name" value="{{ $option_rss_name }}" />
+                <input type="text" class="form-control" id="option_rss_name" value="{{ $optionRssName }}" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label" for="option_rss_number">Number of posts</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="option_rss_number" value="{{ $option_rss_number }}" />
+                <input type="text" class="form-control" id="option_rss_number" value="{{ $optionRssNumber }}" />
             </div>
         </div>
         <div class="form-group">

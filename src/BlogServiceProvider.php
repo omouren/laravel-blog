@@ -1,4 +1,6 @@
-<?php namespace didcode\Blog;
+<?php
+
+namespace didcode\Blog;
 
 use Illuminate\Support\ServiceProvider;
 

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @if ($post_id > 0)
+    @if ($postId > 0)
         <h1 class="col-md-offset-2">Edit a Post</h1>
     @else
         <h1 class="col-md-offset-2">Create a Post</h1>
@@ -34,7 +34,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label" for="chapo">Category</label>
             <div class="col-sm-10">
-                <?php $category = isset($post) ? $post->category_id : null; ?>
+                <?php $category = isset($post) ? $post->categoryId : null; ?>
                 {!! Form::select('category_id', $categories, $category, ["id"=>"category_id", "class" => "form-control"] ) !!}
             </div>
         </div>
@@ -53,13 +53,13 @@
             </div>
         </div>
 
-        <input type="hidden" id="post_id" value="{{ $post_id }}" />
+        <input type="hidden" id="post_id" value="{{ $postId }}" />
 
         <button id="btn_save_post" type="submit" class="col-md-offset-2 btn btn-primary">Save post</button>
 
-        @if ($post_id > 0)
+        @if ($postId > 0)
             <button id="btn_publish_post" type="submit" class="btn btn-success">Publish post</button>
-            <a href="/admin/post/{{ $post_id }}/image" class="btn btn-default">Add Image</a>
+            <a href="/admin/post/{{ $postId }}/image" class="btn btn-default">Add Image</a>
         @endif
 
 
