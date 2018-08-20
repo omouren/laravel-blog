@@ -2,11 +2,17 @@
 
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Option extends Eloquent {
+class Option extends Eloquent
+{
     protected $table = 'didcode_blog_options';
-    protected $fillable = ['name', 'value'];
 
-    static public function get($name) {
+    protected $fillable = [
+        'name',
+        'value'
+    ];
+
+    static public function get($name)
+    {
         $option = self::whereName($name)->first();
         if (isset($option->value)) {
             return $option->value;

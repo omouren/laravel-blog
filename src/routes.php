@@ -1,23 +1,22 @@
 <?php
 
-Route::group(['prefix' => '/admin'], function()
+Route::group(['prefix' => '/admin/blog', 'middleware' => config('blog.admin_middleware')], function()
 {
-    Route::get('/blog', 'didcode\Blog\AdminController@index')->name('didcode-admin-blog');
+    Route::get('/', 'didcode\Blog\AdminController@index')->name('didcode-admin-blog');
     Route::get('/post/create', 'didcode\Blog\AdminController@createPost')->name('didcode-admin-create-post');
-    Route::get('/post/{id}/edit', 'didcode\Blog\AdminController@editPost')->name('didcode-admin-edit-post');
+    Route::post('/post/create', 'didcode\Blog\AdminController@createPost')->name('didcode-admin-create-post');
+    Route::get('/post/{post}/edit', 'didcode\Blog\AdminController@editPost')->name('didcode-admin-edit-post');
+    Route::post('/post/{post}/edit', 'didcode\Blog\AdminController@editPost')->name('didcode-admin-edit-post');
+    Route::get('/post/{post}/delete', 'didcode\Blog\AdminController@deletePost')->name('didcode-admin-delete-post');
+    Route::get('/post/{post}/publish', 'didcode\Blog\AdminController@publishPost')->name('didcode-admin-post-publish');
 
-    Route::post('/post/{id}/image', 'didcode\Blog\AdminController@addImage')->name('didcode-admin-add-image');
-    Route::get('/post/{id}/image', 'didcode\Blog\AdminController@formAddImage')->name('didcode-admin-form-add-image');
+    Route::get('/category/create', 'didcode\Blog\AdminController@createCategory')->name('didcode-admin-create-category');
+    Route::post('/category/create', 'didcode\Blog\AdminController@createCategory')->name('didcode-admin-create-category');
+    Route::get('/category/{category}/edit', 'didcode\Blog\AdminController@editCategory')->name('didcode-admin-edit-category');
+    Route::post('/category/{category}/edit', 'didcode\Blog\AdminController@editCategory')->name('didcode-admin-edit-category');
+    Route::get('/category/{category}/delete', 'didcode\Blog\AdminController@deleteCategory')->name('didcode-admin-delete-category');
 
-    Route::post('/blog/save_post', 'didcode\Blog\AdminController@ajax_post_save')->name('didcode-admin-ajax-post-save');
-    Route::post('/blog/load_post', 'didcode\Blog\AdminController@ajax_post_load')->name('didcode-admin-ajax-post-load');
-    Route::post('/blog/publish_post', 'didcode\Blog\AdminController@ajax_post_publish')->name('didcode-admin-ajax-post-publish');
-
-    Route::post('/blog/create_category', 'didcode\Blog\AdminController@ajax_category_create')->name('didcode-admin-ajax-category-create');
-
-    Route::post('/blog/save_options', 'didcode\Blog\AdminController@ajax_options_save')->name('didcode-admin-ajax-options-save');
-
-//    Route::resource('post', 'didcode\Blog\BlogPostController');
+    Route::post('/save_options', 'didcode\Blog\AdminController@ajax_options_save')->name('didcode-admin-ajax-options-save');
 });
 
 Route::get('/feed' , 'didcode\Blog\BlogController@rss')->name('didcode-feed');

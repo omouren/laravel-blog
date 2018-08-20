@@ -1,8 +1,7 @@
 @extends('blog::admin.layout')
 
 @section('content')
-
-
+    @parent
     <hr />
 
     <h2>Categories</h2>
@@ -12,7 +11,7 @@
             <th>Name</th>
             <th>Slug</th>
             <th># of posts</th>
-            {{--<th>Actions</th>--}}
+            <th>Actions</th>
         </tr>
         @foreach($categories as $category)
             <tr>
@@ -21,7 +20,8 @@
                 <td>{{ $category->slug }}</td>
                 <td>{{ $category->posts_num }}</td>
                 <td>
-{{--                    <a href="{{ action('\didcode\Blog\AdminController@editCat', $category->id) }}" class="btn btn-primary">Edit</a>--}}
+                    <a href="{{ Route('didcode-admin-edit-category', $category->id) }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ Route('didcode-admin-delete-category', $category->id) }}" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
 
@@ -35,28 +35,26 @@
     <table class="table table-bordered table-hover table-striped">
         <tr>
             <th>ID</th>
-            <th>Status</th>
-            <th>Published on</th>
             <th>Title</th>
+            <th>Published on</th>
             <th>Actions</th>
         </tr>
-    @foreach($posts as $post)
-        <tr>
-            <td>{{ $post->id }}</td>
-            <td>{{ $post->status }}</td>
-            <td>{{ $post->published_at }}</td>
-            <td>{{ $post->title }}</td>
-            <td>
-                <a href="{{ action('\didcode\Blog\AdminController@editPost', $post->id) }}" class="btn btn-primary">Edit</a>
-                @if (!$post->is_published() )
-                    <button data-id="{{$post->id}}" class="btn btn-publish btn-success">Publish</button>
-                @endif
-            </td>
-        </tr>
-
-    @endforeach
+        @foreach($posts as $post)
+            <tr>
+                <td>{{ $post->id }}</td>
+                <td>{{ $post->title }}</td>
+                <td>{{ $post->published_at }}</td>
+                <td>
+                    <a href="{{ Route('didcode-admin-edit-post', $post->id) }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ Route('didcode-admin-delete-post', $post->id) }}" class="btn btn-danger">Delete</a>
+                    @if (!$post->is_published() )
+                        <a href="{{ Route('didcode-admin-post-publish', $post->id) }}" class="btn btn-publish btn-success">Publish</a>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
     </table>
-    <a href="{{ action('\didcode\Blog\AdminController@createPost') }}" class="btn btn-success">Create post</a>
+    <a href="{{ Route('didcode-admin-create-post') }}" class="btn btn-success">Create post</a>
 
     <hr />
     <h3>RSS Options</h3>

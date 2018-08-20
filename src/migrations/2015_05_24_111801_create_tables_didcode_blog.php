@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,7 +13,6 @@ class CreateTablesDidcodeBlog extends Migration {
 	 */
 	public function up()
 	{
-
         Schema::create('didcode_blog_categories', function(Blueprint $table) {
             $table->increments('id');
 
@@ -38,14 +38,12 @@ class CreateTablesDidcodeBlog extends Migration {
             $table->string('title');
             $table->string('slug');
 
-            $table->string('image');
+            $table->string('image')->nullable();
 
-            $table->text('chapo');
-            $table->text('content');
+            $table->text('chapo')->nullable();
+            $table->text('content')->nullable();
 
             $table->integer('category_id');
-
-            $table->enum('post_status', ['draft', 'published']);
 
             $table->dateTime('published_at')->nullable();
             $table->timestamps();

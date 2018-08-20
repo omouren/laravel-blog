@@ -9,15 +9,20 @@ use didcode\Blog\Models\Option;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
-class AdminController extends Controller {
+class AdminController extends Controller
+{
+    /**
+     * @var Request
+     */
+    private $request;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $middleware = config('blog.admin_middleware');
-        if ($middleware) {
-            $this->middleware($middleware);
-        }
+        $this->request = $request;
     }
 
     /**
@@ -27,107 +32,307 @@ class AdminController extends Controller {
      */
     public function index()
     {
-
         $posts = Post::orderBy('created_at','desc')->paginate(10);
-        return view('blog::admin.index')
-            ->withPosts($posts)
-            ->withCategories(Category::all())
-            ->withOptionRssName(Option::get('rss_name'))
-            ->withOptionRssNumber(Option::get('rss_number'));
+
+        return view('blog::admin.index', [
+            'posts' => $posts,
+            'categories' => Category::all(),
+            'optionRssName' => Option::get('rss_name'),
+            'optionRssNumber' => Option::get('rss_number')
+        ]);
     }
 
-    public function createPost() {
-        $categories = Category::pluck('name', 'id');
-
-        return view('blog::admin.editor')
-            ->withCategories($categories)
-            ->withPostId('');
-    }
-
-    public function editPost($id) {
-        $categories = Category::pluck('name', 'id');
-        $post= Post::find($id);
-
-        return view('blog::admin.editor')
-            ->withCategories($categories)
-            ->withPost($post)
-            ->withPostId($id);
-    }
-
-    public function show($slug) {
-        $post = Post::whereSlug($slug)->first();
-
-        return view('blog::post.show')
-            ->withPost($post);
-    }
-
-    public function showPost($slug) {
-        $post = Post::whereSlug($slug)->first();
-
-        return view('blog::post.show')
-            ->withPost($post);
-    }
-
-    public function formAddImage($post_id) {
-        $post = Post::find($post_id);
-
-        return view('blog::admin.image')
-            ->withPost($post);
-    }
-
-    public function addImage($post_id) {
-        @mkdir(public_path().'/img/');
-        @mkdir(public_path().'/img/posts/');
-        @mkdir(public_path().'/img/posts/thumbs');
-
-        $post = Post::find($post_id);
-
-        $file = Input::file('image');
-        $img = \Image::make($file)->fit(1000, 500);
-
-        $filename = '/img/posts/'.$file->getClientOriginalName();
-        $img->save( public_path().$filename );
-
-        $post->image = $file->getClientOriginalName();
-        $post->save();
-
-        return redirect('/admin/blog/');
-    }
-
-    public function ajax_post_save() {
-
-        $fields = array_except(Input::all(), ['_token', 'post_id' ]);
-
-        $fields['slug'] = (strlen($fields['slug']) === 0) ? Str::slug($fields['title']) : Str::slug($fields['slug']);
-
-        if (Input::get('post_id') > 0) {
-            $post = Post::find(Input::get('post_id'));
-            $post->update($fields);
-        } else {
-            $post = Post::create($fields);
+    public function createPost()
+    {
+        $post = new Post();
+        if ($this->request->getMethod() === 'POST') {
+            return $this->savePost($post);
         }
 
-        return response()->json($post);
+        $categories = Category::pluck('name', 'id');
+
+        return view('blog::admin.post', [
+            'categories' => $categories,
+            'post' => $post
+        ]);
     }
 
-    public function ajax_post_load() {
-        $post_id = Input::get('post_id');
+    public function editPost(Post $post)
+    {
+        if ($this->request->getMethod() === 'POST') {
+            return $this->savePost($post);
+        }
 
+        $categories = Category::pluck('name', 'id');
 
-        $post = Post::find($post_id);
-        return response()->json($post);
+        return view('blog::admin.post', [
+            'categories' => $categories,
+            'post' => $post
+        ]);
     }
 
-    public function ajax_post_publish() {
-        $post_id = Input::get('post_id');
+    private function savePost(Post $post)
+    {
+        if ($this->request->get('published_at_date') && $this->request->get('published_at_time')) {
+            $this->request->offsetSet('published_at', \DateTime::createFromFormat('Y-m-d H:i', $this->request->get('published_at_date') . ' ' . $this->request->get('published_at_time')));
+        }
 
-        $post = Post::find($post_id);
-        if ($post->published_at === '0000-00-00 00:00:00') {
-            $post->published_at = DB::raw('now()');
+        $validation = Validator::make(
+            $this->request->all(),
+            [
+                'title' => 'required|string|max:255',
+                'slug' => 'required|string|max:255',
+                'published_at' => 'date',
+                'category_id' => 'required|string',
+                'chapo' => 'string',
+                'content' => 'string',
+            ]
+        );
+
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation)->withInput();
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Clean up params
+            $params = [];
+            foreach ($this->request->all() as $item => $value) {
+                $params[$item] = $value;
+
+                if ($value === '') {
+                    $params[$item] = null;
+                }
+            }
+
+            if (!$post->id) {
+                $post->fill($params);
+                $post->save();
+            } else {
+                $post->update($params);
+            }
+
+            DB::commit();
+
+            if ($this->request->action === 'update') {
+                $redirect = $this->request->url();
+                $message = [
+                    'message' => [
+                        'text' => "Post \"{$post->id}\" successfully updated.",
+                        'type' => 'success'
+                    ]
+                ];
+
+                return response()->redirectTo($redirect)->with($message);
+            } else {
+                return response()->redirectTo('/admin/blog');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            Log::error($e);
+
+            $redirect = $this->request->url();
+            $message = [
+                'message' => [
+                    'text' => "An error occurred.",
+                    'type' => 'error'
+                ]
+            ];
+
+            return response()->redirectTo($redirect)->with($message);
+        }
+    }
+
+    public function deletePost(Post $post)
+    {
+        DB::beginTransaction();
+
+        try {
+            $post->delete();
+
+            DB::commit();
+
+            $message = [
+                'message' => [
+                    'text' => "Post \"{$post->id}\" successfully deleted.",
+                    'type' => 'success'
+                ]
+            ];
+
+            return response()->redirectTo('/admin/blog')->with($message);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            Log::error($e);
+
+            $message = [
+                'message' => [
+                    'text' => "Can't delete this post. Please retry later.",
+                    'type' => 'error'
+                ]
+            ];
+
+            return response()->redirectTo('/admin/blog')->with($message);
+        }
+    }
+
+    public function publishPost(Post $post)
+    {
+        DB::beginTransaction();
+
+        try {
+            $post->published_at = new \DateTime();
             $post->save();
+
+            DB::commit();
+
+            $message = [
+                'message' => [
+                    'text' => "Post \"{$post->id}\" successfully published.",
+                    'type' => 'success'
+                ]
+            ];
+
+            return response()->redirectTo('/admin/blog')->with($message);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            Log::error($e);
+
+            $redirect = $this->request->url();
+            $message = [
+                'message' => [
+                    'text' => "An error occurred.",
+                    'type' => 'error'
+                ]
+            ];
+
+            return response()->redirectTo($redirect)->with($message);
+        }
+    }
+    
+    public function createCategory()
+    {
+        $category = new Category();
+        if ($this->request->getMethod() === 'POST') {
+            return $this->saveCategory($category);
         }
 
-        return response()->json($post);
+        return view('blog::admin.category', [
+            'category' => $category
+        ]);
+    }
+
+    public function editCategory(Category $category)
+    {
+        if ($this->request->getMethod() === 'POST') {
+            return $this->saveCategory($category);
+        }
+
+        return view('blog::admin.category', [
+            'category' => $category
+        ]);
+    }
+
+    private function saveCategory(Category $category)
+    {
+        $validation = Validator::make(
+            $this->request->all(),
+            [
+                'name' => 'required|string|max:255',
+                'slug' => 'required|string|max:255',
+            ]
+        );
+
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation)->withInput();
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Clean up params
+            $params = [];
+            foreach ($this->request->all() as $item => $value) {
+                $params[$item] = $value;
+
+                if ($value === '') {
+                    $params[$item] = null;
+                }
+            }
+
+            if (!$category->id) {
+                $category->fill($params);
+                $category->save();
+            } else {
+                $category->update($params);
+            }
+
+            DB::commit();
+
+            if ($this->request->action === 'update') {
+                $redirect = $this->request->url();
+                $message = [
+                    'message' => [
+                        'text' => "Category \"{$category->id}\" successfully updated.",
+                        'type' => 'success'
+                    ]
+                ];
+
+                return response()->redirectTo($redirect)->with($message);
+            } else {
+                return response()->redirectTo('/admin/blog');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            Log::error($e);
+
+            $redirect = $this->request->url();
+            $message = [
+                'message' => [
+                    'text' => "An error occurred.",
+                    'type' => 'error'
+                ]
+            ];
+
+            return response()->redirectTo($redirect)->with($message);
+        }
+    }
+
+    public function deleteCategory(Category $category)
+    {
+        DB::beginTransaction();
+
+        try {
+            $category->delete();
+
+            DB::commit();
+
+            $message = [
+                'message' => [
+                    'text' => "Category \"{$category->id}\" successfully deleted.",
+                    'type' => 'success'
+                ]
+            ];
+
+            return response()->redirectTo('/admin/blog')->with($message);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            Log::error($e);
+
+            $message = [
+                'message' => [
+                    'text' => "Can't delete this category. Please retry later.",
+                    'type' => 'error'
+                ]
+            ];
+
+            return response()->redirectTo('/admin/blog')->with($message);
+        }
     }
 
     public function ajax_options_save() {
@@ -142,21 +347,5 @@ class AdminController extends Controller {
         }
 
         return response()->json($ret);
-    }
-
-    public function ajax_category_create() {
-        $category_name = Input::get('category_name');
-
-        if (strlen($category_name) == 0) {
-            return response()->json(['status' => 'error', 'error' => 'Categories cannot have empty names.']);
-        }
-
-        $category = Category::whereName($category_name)->first();
-        if ($category) {
-            return response()->json(['status' => 'error', 'error' => 'This category already exists.']);
-        }
-
-        $category = Category::create(['name' => $category_name, 'slug' => Str::slug($category_name)]);
-        return response()->json(['status' => 'success', 'object' => $category]);
     }
 }

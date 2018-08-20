@@ -14,6 +14,12 @@
         <div class="pull-right" style="padding-top: 10px"><a class="btn btn-primary" target="_blank" href="{{ config('blog.base_path') }}">View blog</a></div>
         <h1><a href="/admin/blog/">Admin Blog</a></h1>
 
+        @if (session('message'))
+            <div class="alert {{ session('message')['type'] }}">
+                <i class="{{ session('message')['type'] == 'success' ? 'ion-checkmark-circled' : 'ion-alert-circled' }}"></i>
+                {{ session('message')['text'] }}
+            </div>
+        @endif
         @yield('content')
 
     </div>
